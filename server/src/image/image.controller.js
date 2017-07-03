@@ -93,6 +93,12 @@ function uploadImage(req, res) {
   });
 }
 
+exports.find = queryServer;
+exports.upload = uploadImage;
+
+
+// Helper functions
+
 function addImage(image, firstName, lastName, callback) {
   var imageSchema = mongoose.Schema({
     path: {
@@ -122,39 +128,6 @@ function addImage(image, firstName, lastName, callback) {
   imageUpload['originalName'] = image.originalname;
   imageUpload['firstName'] = firstName;
   imageUpload['lastName'] = lastName;
-console.log(imageUpload);
+
   imageModel.create(imageUpload, callback);
 }
-
-exports.find = queryServer;
-exports.upload = uploadImage;
-
-
-
-// function refreshToken(req, res, callback) {
-//   var date = new Date();
-//   var jwto;
-//   var hour = date.getTime() + (date.getHours() * 60 * 60 * 1000);
-//   var key = fs.readFileSync(pemFile);
-//   var assertion = {
-//     'iss': 'devugc@service.account',
-//     'exp': parseInt(hour.toString().substring(0, 10)),
-//     'iat': parseInt(new Date().getTime().toString().substring(0, 10)),
-//   };
-
-//   jwto = jwt.sign(assertion, key, { algorithm: 'RS256' });
-
-//   request.post({
-//     url: 'https://www.socialpatrol.net/service/oauth2/token',
-//     json: {
-//       'grant_type': 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-//       'assertion': jwto
-//     }
-//   }, function (error, response, body) {
-//     if (!error) {
-//       console.log('token success');
-//       fs.writeFile(tokenFile, body.access_token);
-//       callback(req, res);
-//     }
-//   });
-// }
