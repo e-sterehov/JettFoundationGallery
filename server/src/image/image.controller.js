@@ -5,6 +5,7 @@ var path = require('path');
 var pemFile = path.resolve(__dirname, '../../../mykey.pem');
 var tokenFile = path.resolve(__dirname, '../../../token');
 var jwt = require('jsonwebtoken');
+var mongoose = require('mongoose');
 
 /**
  * GET /images
@@ -15,7 +16,6 @@ var jwt = require('jsonwebtoken');
  */
 
 function queryServer(req, res) {
-console.log('here test');
   var offset = req.offset;
   var limit = 20;
   var date = new Date();
@@ -79,13 +79,57 @@ console.log('here test');
  */
 
 function uploadImage(req, res) {
-  console.log(req.body);
-  console.log(req.file);
-  return res.status(200).json();
+
+  var firstName = (req.body.firstName);
+  var lastName = (req.body.lastName);
+  var image = req.file;
+
+  addImage(image, firstName, lastName, function (err) {
+    if (!err) {
+      return res.status(200).json();
+    } else {
+      return res.status(400).json(err);
+    }
+  });
+}
+
+function addImage(image, firstName, lastName, callback) {
+  var imageSchema = mongoose.Schema({
+    path: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    originalName: {
+      type: String,
+      required: true
+    },
+    firstName: {
+      type: String,
+      required: true
+    },
+    lastName: {
+      type: String,
+      required: true
+    }
+
+  });
+
+  var imageModel = module.exports = mongoose.model('saved_images', imageSchema);
+
+  var imageUpload = {};
+  imageUpload['path'] = image.path;
+  imageUpload['originalName'] = image.originalname;
+  imageUpload['firstName'] = firstName;
+  imageUpload['lastName'] = lastName;
+console.log(imageUpload);
+  imageModel.create(imageUpload, callback);
 }
 
 exports.find = queryServer;
 exports.upload = uploadImage;
+
+
 
 // function refreshToken(req, res, callback) {
 //   var date = new Date();

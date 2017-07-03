@@ -14,7 +14,6 @@ var routes = require('./src/routes');
 
 mongoose.connect('mongodb://localhost:27017/jett_foundation');
 
-
 /**
  * Express app configurations
  */

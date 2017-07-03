@@ -61,7 +61,7 @@ function appendImages(images) {
 
 $('#uploadImageForm').submit(function (e) {
   e.preventDefault();
-  
+
   var formData = new FormData($(this)[0]);
   $.ajax({
     url: '/api/image',
