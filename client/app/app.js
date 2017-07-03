@@ -61,13 +61,15 @@ function appendImages(images) {
 
 $('#uploadImageForm').submit(function (e) {
   e.preventDefault();
+  
+  var formData = new FormData($(this)[0]);
   $.ajax({
     url: '/api/image',
-    type: 'post',
-    data: $('#uploadImageForm').serialize(),
-    success: function () {
-      console.log('success');
-    }
+    type: 'POST',
+    // data: $('#uploadImageForm').serialize(),
+    data: formData,
+    contentType: false,
+    processData: false
   });
 });
 

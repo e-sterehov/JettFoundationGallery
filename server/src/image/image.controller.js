@@ -80,6 +80,7 @@ console.log('here test');
 
 function uploadImage(req, res) {
   console.log(req.body);
+  console.log(req.file);
   return res.status(200).json();
 }
 
