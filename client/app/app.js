@@ -59,11 +59,16 @@ function appendImages(images) {
   }
 }
 
-$('#uploadImageForm').submit(function () {
-  $.post("/api/image", document.getElementById("formText").value, function () {
-    console.log('success');
+$('#uploadImageForm').submit(function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: '/api/image',
+    type: 'post',
+    data: $('#uploadImageForm').serialize(),
+    success: function () {
+      console.log('success');
+    }
   });
-  return false;
 });
 
 $(window).resize(function () {

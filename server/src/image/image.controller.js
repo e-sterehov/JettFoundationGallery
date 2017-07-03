@@ -15,6 +15,7 @@ var jwt = require('jsonwebtoken');
  */
 
 function queryServer(req, res) {
+console.log('here test');
   var offset = req.offset;
   var limit = 20;
   var date = new Date();
@@ -78,7 +79,7 @@ function queryServer(req, res) {
  */
 
 function uploadImage(req, res) {
-  console.log(req);
+  console.log(req.body);
   return res.status(200).json();
 }
 
