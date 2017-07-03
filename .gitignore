@@ -6,7 +6,8 @@
 .idea/
 .vscode
 
-data
+
+data/
 node_modules/
 bower_components/
 .tmp/
