@@ -27,7 +27,9 @@ function queryServer(req, res) {
     'iat': parseInt(new Date().getTime().toString().substring(0, 10)),
   };
 
-  jwto = jwt.sign(assertion, key, { algorithm: 'RS256' });
+  jwto = jwt.sign(assertion, key, {
+    algorithm: 'RS256'
+  });
 
   request.post({
     url: 'https://www.socialpatrol.net/service/oauth2/token',
@@ -40,19 +42,24 @@ function queryServer(req, res) {
       console.log('token success');
       fs.writeFile(tokenFile, body.access_token);
       request.post({
-        url: 'https://www.socialpatrol.net/api/external/jettfoundation',
-        headers:
-        {
-          'Authorization': 'Bearer ' + body.access_token
+          url: 'https://www.socialpatrol.net/api/external/jettfoundation',
+          headers: {
+            'Authorization': 'Bearer ' + body.access_token
+          },
+          json: {
+            streams: [2407, 2421],
+            offset: req.query.offset * limit,
+            limit: limit
+          }
         },
-        json: { streams: [2407, 2421], offset: req.query.offset * limit, limit: limit }
-      },
         function (error, response, body) {
           if (!error) {
             if (body.messageType !== 'error') {
               return res.status(200).json(body);
             } else {
-              return res.status(200).json({ errorMessage: 'Issues communicating with the server, please try again later' });
+              return res.status(200).json({
+                errorMessage: 'Issues communicating with the server, please try again later'
+              });
             }
           } else {
             console.log('ERROR');
@@ -60,10 +67,23 @@ function queryServer(req, res) {
         });
     }
   });
-
-
 }
+
+/**
+ * POST /image
+ *
+ * @description
+ * list of things
+ *
+ */
+
+function uploadImage(req, res) {
+  console.log(req);
+  return res.status(200).json();
+}
+
 exports.find = queryServer;
+exports.upload = uploadImage;
 
 // function refreshToken(req, res, callback) {
 //   var date = new Date();

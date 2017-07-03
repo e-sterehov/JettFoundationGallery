@@ -57,7 +57,14 @@ function appendImages(images) {
       $(document).scrollTop(top);
     });
   }
-};
+}
+
+$('#uploadImageForm').submit(function () {
+  $.post("/api/image", document.getElementById("formText").value, function () {
+    console.log('success');
+  });
+  return false;
+});
 
 $(window).resize(function () {
   $grid = $('#grid').packery({

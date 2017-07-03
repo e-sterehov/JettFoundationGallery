@@ -8,8 +8,12 @@ var express = require('express');
 var config = require('config');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var routes = require('./src/routes');
+
+mongoose.connect('mongodb://localhost:27017/jett_foundation');
+
 
 /**
  * Express app configurations
