@@ -5,7 +5,7 @@ var path = require('path');
 var pemFile = path.resolve(__dirname, '../../../mykey.pem');
 var tokenFile = path.resolve(__dirname, '../../../token');
 var jwt = require('jsonwebtoken');
-var mongoose = require('mongoose');
+var savedImagesModel = require('./saved_image.model.js');
 
 /**
  * GET /images
@@ -16,7 +16,6 @@ var mongoose = require('mongoose');
  */
 
 function queryServer(req, res) {
-  var offset = req.offset;
   var limit = 20;
   var date = new Date();
   var jwto;
@@ -58,7 +57,7 @@ function queryServer(req, res) {
             if (body.messageType !== 'error') {
               return res.status(200).json(body);
             } else {
-              return res.status(200).json({
+              return res.status(400).json({
                 errorMessage: 'Issues communicating with the server, please try again later'
               });
             }
@@ -84,9 +83,9 @@ function uploadImage(req, res) {
   var lastName = (req.body.lastName);
   var image = req.file;
 
-  addImage(image, firstName, lastName, function (err) {
+  addImage(image, firstName, lastName, function (err, body) {
     if (!err) {
-      return res.status(200).json();
+      return res.status(200).json(body);
     } else {
       return res.status(400).json(err);
     }
@@ -100,34 +99,11 @@ exports.upload = uploadImage;
 // Helper functions
 
 function addImage(image, firstName, lastName, callback) {
-  var imageSchema = mongoose.Schema({
-    path: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    originalName: {
-      type: String,
-      required: true
-    },
-    firstName: {
-      type: String,
-      required: true
-    },
-    lastName: {
-      type: String,
-      required: true
-    }
-
-  });
-
-  var imageModel = module.exports = mongoose.model('saved_images', imageSchema);
-
   var imageUpload = {};
   imageUpload['path'] = image.path;
   imageUpload['originalName'] = image.originalname;
   imageUpload['firstName'] = firstName;
   imageUpload['lastName'] = lastName;
 
-  imageModel.create(imageUpload, callback);
+  savedImagesModel.create(imageUpload, callback);
 }

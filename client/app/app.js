@@ -66,11 +66,14 @@ $('#uploadImageForm').submit(function (e) {
   $.ajax({
     url: '/api/image',
     type: 'POST',
-    // data: $('#uploadImageForm').serialize(),
     data: formData,
     contentType: false,
     processData: false
-  });
+  }).done(function () {
+    $('#imageUploadModal').modal('hide');
+  }).fail(function (jqXHR, textStatus) {
+    console.log(textStatus);
+  })
 });
 
 $(window).resize(function () {
