@@ -175,6 +175,8 @@ body {
   line-height: 4em;
   font-size: 2.5em;
   margin-left: 35%;
+  background: #d64436;
+  color: #ffffff !important;
 }
 
 .upload-image {

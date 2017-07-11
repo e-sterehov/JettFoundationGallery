@@ -193,7 +193,7 @@ function addImage(image, firstName, lastName, callback) {
   var validationError = validateImageForm(image, firstName, lastName);
 
   if (!validationError) {
-    imageUpload['path'] = image.path;
+    imageUpload['name'] = image.filename;
     imageUpload['originalName'] = image.originalname;
     imageUpload['firstName'] = firstName;
     imageUpload['lastName'] = lastName;
