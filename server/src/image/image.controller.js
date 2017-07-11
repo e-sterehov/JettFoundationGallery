@@ -96,14 +96,33 @@ exports.find = queryServer;
 exports.upload = uploadImage;
 
 
-// Helper functions
+// Helper Functions
 
 function addImage(image, firstName, lastName, callback) {
   var imageUpload = {};
-  imageUpload['path'] = image.path;
-  imageUpload['originalName'] = image.originalname;
-  imageUpload['firstName'] = firstName;
-  imageUpload['lastName'] = lastName;
+  var validationError = validateImageForm(image, firstName, lastName);
 
-  savedImagesModel.create(imageUpload, callback);
+  if (!validationError) {
+    imageUpload['path'] = image.path;
+    imageUpload['originalName'] = image.originalname;
+    imageUpload['firstName'] = firstName;
+    imageUpload['lastName'] = lastName;
+
+    savedImagesModel.create(imageUpload, callback);
+  } else {
+    callback({message: validationError});
+  }
+
+}
+
+function validateImageForm(image, firstName, lastName) {
+  if (!image) {
+    return 'No image selected';
+  } else if (!firstName) {
+    return 'First name not provided';
+  } else if (!lastName) {
+    return 'Last name not provided';
+  }
+
+  return false;
 }
