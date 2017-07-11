@@ -110,18 +110,24 @@ function addImage(image, firstName, lastName, callback) {
 
     savedImagesModel.create(imageUpload, callback);
   } else {
-    callback({message: validationError});
+    callback({
+      message: validationError
+    });
   }
 
 }
 
 function validateImageForm(image, firstName, lastName) {
+  var ValidImageTypes = ["image/gif", "image/jpeg", "image/png"];
+
   if (!image) {
     return 'No image selected';
   } else if (!firstName) {
     return 'First name not provided';
   } else if (!lastName) {
     return 'Last name not provided';
+  } else if (ValidImageTypes.indexOf(image.mimetype) < 0) {
+    return 'Invalid image format: must be one of the following formats: .gif .jpeg .png';    
   }
 
   return false;

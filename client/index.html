@@ -65,6 +65,7 @@
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li class="donate">
+            <button type="button" class="upload-image" data-toggle="modal" data-target="#imageUploadModal">Upload Image</button>
             <strong>Today Counts.</strong>
             <a class="donate-button" href="http://www.jettfoundation.org/donate/" target="_blank">Donate!</a>
           </li>
@@ -133,11 +134,11 @@
   </div>
 
   <!-- Button trigger modal -->
-  <div class="container-fluid">
+  <!--<div class="container-fluid">
     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#imageUploadModal">
       Upload Image
     </button>
-  </div>
+  </div>-->
 
   <div class="container-fluid">
     <div id="grid">
@@ -204,21 +205,21 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="imageUploadModalLabel">Image Upload</h4>
+          <h4 class="modal-title" id="imageUploadModalLabel">Upload Image</h4>
         </div>
         <div class="modal-body">
           <form role="form" id="uploadImageForm">
             <div class="form-group">
               <label for="firstName">First Name</label>
-              <input type="text" class="form-control" id="firstName" name="firstName">
+              <input type="text" class="form-control" id="firstName" name="firstName" required>
             </div>
             <div class="form-group">
               <label for="lastName">Last Name</label>
-              <input type="text" class="form-control" id="lastName" name="lastName"
+              <input type="text" class="form-control" id="lastName" name="lastName" required>
             </div>
             <div class="form-group">
-              <label for="uploadImage">Image Upload</label>
-              <input type="file" id="uploadImage" name="uploadImage">
+              <label for="uploadImage">Upload Image</label>
+              <input type="file" accept="image/*" id="uploadImage" name="uploadImage" required>
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>

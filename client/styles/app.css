@@ -1,6 +1,5 @@
 @import 'https://fonts.googleapis.com/css?family=Droid+Sans';
 @import 'https://fonts.googleapis.com/css?family=Chewy';
-
 body {
   font-family: "Droid Sans", "Verdana", "Arial", sans-serif;
   background: #444444;
@@ -57,7 +56,7 @@ body {
   width: 100%;
 }
 
-.sc{
+.sc {
   font-size: 1.21em;
 }
 
@@ -71,7 +70,7 @@ body {
   width: 100%;
 }
 
-.hug-funders{
+.hug-funders {
   font-family: 'Chewy', cursive;
   font-size: 3.1em;
 }
@@ -147,7 +146,7 @@ body {
   color: #777777;
 }
 
-.donate-button, .load-more {
+.donate-button, .load-more .upload-image {
   text-transform: uppercase;
   background: #d64436;
   color: #ffffff !important;
@@ -162,7 +161,7 @@ body {
   display: inline-block !important;
 }
 
-.donate-button:hover, .load-more:hover {
+.donate-button:hover, .load-more:hover, .upload-image:hover {
   background: #b43125 !important;
   color: #ffffff !important;
 }
@@ -176,6 +175,17 @@ body {
   line-height: 4em;
   font-size: 2.5em;
   margin-left: 35%;
+}
+
+.upload-image {
+  text-transform: uppercase;
+  background: #d64436;
+  color: #ffffff !important;
+  border: none;
+  margin-right: 10px;
+  border-radius: 5px;
+  height: 30px;
+  font-size: medium;
 }
 
 .post-grid {

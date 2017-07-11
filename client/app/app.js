@@ -59,6 +59,18 @@ function appendImages(images) {
   }
 }
 
+$(window).resize(function () {
+  $grid = $('#grid').packery({
+    itemSelector: '.grid-item',
+    gutter: 0
+  });
+});
+
+$().ready(function () {
+  getImages();
+});
+
+// Image Upload Modal
 $('#uploadImageForm').submit(function (e) {
   e.preventDefault();
 
@@ -70,19 +82,13 @@ $('#uploadImageForm').submit(function (e) {
     contentType: false,
     processData: false
   }).done(function () {
-    $('#imageUploadModal').modal('hide');
+    clearAndCloseForm();
   }).fail(function (jqXHR, textStatus) {
     console.log(textStatus);
   })
 });
 
-$(window).resize(function () {
-  $grid = $('#grid').packery({
-    itemSelector: '.grid-item',
-    gutter: 0
-  });
-});
-
-$().ready(function () {
-  getImages();
-});
+function clearAndCloseForm() {
+  $('form').get(0).reset();
+  $('#imageUploadModal').modal('hide');
+}
