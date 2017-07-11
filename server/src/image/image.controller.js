@@ -70,29 +70,6 @@ function queryServer(req, res) {
 }
 
 /**
- * POST /image
- *
- * @description
- * upload an image
- *
- */
-
-function uploadImage(req, res) {
-
-  var firstName = (req.body.firstName);
-  var lastName = (req.body.lastName);
-  var image = req.file;
-
-  addImage(image, firstName, lastName, function (err, body) {
-    if (!err) {
-      return res.status(200).json(body);
-    } else {
-      return res.status(400).json(err);
-    }
-  });
-}
-
-/**
  * GET /uploadedImages
  *
  * @description
@@ -119,7 +96,9 @@ function getUploadedImages(req, res) {
  */
 
 function getUnmoderatedImages(req, res) {
-  savedImagesModel.find({ moderated:false }, (function (err, items) {
+  savedImagesModel.find({
+    moderated: false
+  }, (function (err, items) {
     if (err) {
       return res.status(400).json(err);
     } else {
@@ -137,7 +116,10 @@ function getUnmoderatedImages(req, res) {
  */
 
 function getModeratedImages(req, res) {
-  savedImagesModel.find({ moderated:true }, (function (err, items) {
+  savedImagesModel.find({
+    moderated: true,
+    rejected: false
+  }, (function (err, items) {
     if (err) {
       return res.status(400).json(err);
     } else {
@@ -146,11 +128,62 @@ function getModeratedImages(req, res) {
   }));
 }
 
+/**
+ * POST /image
+ *
+ * @description
+ * upload an image
+ *
+ */
+
+function uploadImage(req, res) {
+
+  var firstName = (req.body.firstName);
+  var lastName = (req.body.lastName);
+  var image = req.file;
+
+  addImage(image, firstName, lastName, function (err, body) {
+    if (!err) {
+      return res.status(200).json(body);
+    } else {
+      return res.status(400).json(err);
+    }
+  });
+}
+
+/**
+ * POST /image/moderate
+ *
+ * @description
+ * update image moderation status
+ *
+ */
+
+function moderateImage(req, res) {
+  var query = {
+    '_id': req.body._id
+  };
+  req.newData = {};
+  req.newData.moderated = req.body.moderated;
+  req.newData.rejected = req.body.rejected;
+
+  savedImagesModel.findOneAndUpdate(query, req.newData, {
+    upsert: true
+  }, function (err, body) {
+    if (!err) {
+      return res.status(200).json(body);
+    } else {
+      return res.status(400).json(err);
+    }
+  });
+}
+
 exports.find = queryServer;
 exports.findUploaded = getUploadedImages;
 exports.findUnmoderated = getUnmoderatedImages;
 exports.findModerated = getModeratedImages;
 exports.upload = uploadImage;
+exports.moderate = moderateImage;
 
 
 // Helper Functions
@@ -165,6 +198,7 @@ function addImage(image, firstName, lastName, callback) {
     imageUpload['firstName'] = firstName;
     imageUpload['lastName'] = lastName;
     imageUpload['moderated'] = false;
+    imageUpload['rejected'] = false;
 
     savedImagesModel.create(imageUpload, callback);
   } else {

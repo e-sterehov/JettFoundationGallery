@@ -13,6 +13,7 @@ router.get('/api/uploadedImages', image.findUploaded);
 router.get('/api/unmoderatedImages', image.findUnmoderated);
 router.get('/api/moderatedImages', image.findModerated);
 
+router.post('/api/image/moderate', image.moderate);
 router.post('/api/image', multer({ dest: './uploads/'}).single('uploadImage'), image.upload);
 
 module.exports = router;

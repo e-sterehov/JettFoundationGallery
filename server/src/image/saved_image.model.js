@@ -21,6 +21,10 @@ var imageSchema = mongoose.Schema({
     moderated: {
       type: Boolean,
       required: true
+    },
+    rejected: {
+      type: Boolean,
+      required: true
     }
   });
 module.exports = mongoose.model('saved_images', imageSchema);
