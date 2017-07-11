@@ -11,7 +11,7 @@ var savedImagesModel = require('./saved_image.model.js');
  * GET /images
  *
  * @description
- * list of things
+ * get images from SocialPatrol
  *
  */
 
@@ -73,7 +73,7 @@ function queryServer(req, res) {
  * POST /image
  *
  * @description
- * list of things
+ * upload an image
  *
  */
 
@@ -92,7 +92,64 @@ function uploadImage(req, res) {
   });
 }
 
+/**
+ * GET /uploadedImages
+ *
+ * @description
+ * retrieve a list of uploaded images
+ *
+ */
+
+function getUploadedImages(req, res) {
+  savedImagesModel.find({}, (function (err, items) {
+    if (err) {
+      return res.status(400).json(err);
+    } else {
+      return res.status(200).json(items);
+    }
+  }));
+}
+
+/**
+ * GET /unmoderatedImages
+ *
+ * @description
+ * retrieve a list of uploaded unmoderated images
+ *
+ */
+
+function getUnmoderatedImages(req, res) {
+  savedImagesModel.find({ moderated:false }, (function (err, items) {
+    if (err) {
+      return res.status(400).json(err);
+    } else {
+      return res.status(200).json(items);
+    }
+  }));
+}
+
+/**
+ * GET /moderatedImages
+ *
+ * @description
+ * retrieve a list of uploaded moderated images
+ *
+ */
+
+function getModeratedImages(req, res) {
+  savedImagesModel.find({ moderated:true }, (function (err, items) {
+    if (err) {
+      return res.status(400).json(err);
+    } else {
+      return res.status(200).json(items);
+    }
+  }));
+}
+
 exports.find = queryServer;
+exports.findUploaded = getUploadedImages;
+exports.findUnmoderated = getUnmoderatedImages;
+exports.findModerated = getModeratedImages;
 exports.upload = uploadImage;
 
 
@@ -107,6 +164,7 @@ function addImage(image, firstName, lastName, callback) {
     imageUpload['originalName'] = image.originalname;
     imageUpload['firstName'] = firstName;
     imageUpload['lastName'] = lastName;
+    imageUpload['moderated'] = false;
 
     savedImagesModel.create(imageUpload, callback);
   } else {
@@ -127,7 +185,7 @@ function validateImageForm(image, firstName, lastName) {
   } else if (!lastName) {
     return 'Last name not provided';
   } else if (ValidImageTypes.indexOf(image.mimetype) < 0) {
-    return 'Invalid image format: must be one of the following formats: .gif .jpeg .png';    
+    return 'Invalid image format: must be one of the following formats: .gif .jpeg .png';
   }
 
   return false;

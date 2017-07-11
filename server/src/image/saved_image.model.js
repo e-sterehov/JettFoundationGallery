@@ -17,6 +17,10 @@ var imageSchema = mongoose.Schema({
     lastName: {
       type: String,
       required: true
+    },
+    moderated: {
+      type: Boolean,
+      required: true
     }
   });
 module.exports = mongoose.model('saved_images', imageSchema);
