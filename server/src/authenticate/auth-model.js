@@ -2,97 +2,95 @@
  * Configuration.
  */
 
-var config = {
-  clients: [{
-    clientId: 'application',
-    clientSecret: 'secret'
-  }],
-  confidentialClients: [{
-    clientId: 'confidentialApplication',
-    clientSecret: 'topSecret'
-  }],
-  tokens: [],
-  users: [{
-    id: '123',
-    username: 'pedroetb',
-    password: 'password'
-  }]
-};
+var clientModel = require('./mongo/model/client'),
+  tokenModel = require('./mongo/model/token'),
+  userModel = require('./mongo/model/user');
 
 /**
- * Dump the memory storage content (for debug).
+ * Add example client and user to the database (for debug).
  */
 
-// var dump = function () {
-//   console.log('clients', config.clients);
-//   console.log('confidentialClients', config.confidentialClients);
-//   console.log('tokens', config.tokens);
-//   console.log('users', config.users);
-// };
+// function loadExampleData() {
+
+//   var client = new clientModel({
+//     clientId: 'application',
+//     clientSecret: 'secret'
+//   });
+
+//   var user = new userModel({
+//     id: '123',
+//     username: 'pedroetb',
+//     password: 'password'
+//   });
+
+//   client.save(function (err, client) {
+//     if (err) {
+//       return console.error(err);
+//     }
+//     console.log('Created client', client);
+//   });
+
+//   user.save(function (err, user) {
+//     if (err) {
+//       return console.error(err);
+//     }
+//     console.log('Created user', user);
+//   });
+// }
 
 /*
- * Methods used by all grant types.
+ * Get access token.
  */
 
 var getAccessToken = function (bearerToken, callback) {
-  var tokens = config.tokens.filter(function (token) {
-    return token.accessToken === bearerToken;
-  });
-
-  return callback(false, tokens[0]);
+  tokenModel.findOne({
+    accessToken: bearerToken
+  }, callback);
 };
+
+/**
+ * Get client.
+ */
 
 var getClient = function (clientId, clientSecret, callback) {
-  var clients = config.clients.filter(function (client) {
-    return client.clientId === clientId && client.clientSecret === clientSecret;
-  });
-
-  var confidentialClients = config.confidentialClients.filter(function (client) {
-    return client.clientId === clientId && client.clientSecret === clientSecret;
-  });
-
-  callback(false, clients[0] || confidentialClients[0]);
+  clientModel.findOne({
+    clientId: clientId,
+    clientSecret: clientSecret
+  }, callback);
 };
+
+/**
+ * Grant type allowed.
+ */
 
 var grantTypeAllowed = function (clientId, grantType, callback) {
-  var clientsSource;
-  var clients = [];
-
-  if (grantType === 'password') {
-    clientsSource = config.clients;
-  } else if (grantType === 'client_credentials') {
-    clientsSource = config.confidentialClients;
-  }
-  if (!!clientsSource) {
-    clients = clientsSource.filter(function (client) {
-      return client.clientId === clientId;
-    });
-  }
-
-  callback(false, clients.length);
+  callback(false, grantType === "client_credentials");
 };
 
+/**
+ * Save token.
+ */
+
 var saveAccessToken = function (accessToken, clientId, expires, user, callback) {
-  config.tokens.push({
+  var token = new tokenModel({
     accessToken: accessToken,
     expires: expires,
     clientId: clientId,
     user: user
   });
 
-  callback(false);
+  token.save(callback);
 };
 
 /*
- * Method used only by password grant type.
+ * Get user.
  */
 
 var getUser = function (username, password, callback) {
-  var users = config.users.filter(function (user) {
-    return user.username === username && user.password === password;
-  });
-
-  callback(false, users[0]);
+  userModel.findOne({
+    username: username,
+    password: password
+  }, callback);
 };
 
 /*
@@ -102,17 +100,15 @@ var getUser = function (username, password, callback) {
 var getUserFromClient = function (clientId, clientSecret, callback) {
   var user;
 
-  var clients = config.confidentialClients.filter(function (client) {
-    return client.clientId === clientId && client.clientSecret === clientSecret;
-  });
+  getClient(clientId, clientSecret, function (err) {
+    if (!err) {
+      user = {
+        username: clientId
+      };
+    }
 
-  if (clients.length) {
-    user = {
-      username: clientId
-    };
-  }
-
-  callback(false, user);
+    callback(false, user)
+  })
 };
 
 /**
