@@ -30,7 +30,8 @@ router.use(bodyParser.json());
 var oauth = oauthserver({
   model: require('../src/authenticate/auth-model.js'),
   grants: ['password', 'client_credentials'],
-  debug: true
+  debug: true,
+  accessTokenLifetime: null
 });
 
 router.all('/api/oauth2/token', oauth.grant());
@@ -39,10 +40,10 @@ router.all('/api/oauth2/token', oauth.grant());
 router.get('/api/images', image.find);
 
 router.get('/api/uploadedImages', oauth.authorise(), image.findUploaded);
-router.get('/api/unmoderatedImages', image.findUnmoderated);
-router.get('/api/moderatedImages', image.findModerated);
+router.get('/api/unmoderatedImages', oauth.authorise(), image.findUnmoderated);
+router.get('/api/moderatedImages', oauth.authorise(), image.findModerated);
 
-router.post('/api/image/moderate', image.moderate);
+router.post('/api/image/moderate', oauth.authorise(), image.moderate);
 router.post('/api/image', multer({
   storage: storage
 }).single('uploadImage'), image.upload);
