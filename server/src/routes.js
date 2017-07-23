@@ -4,6 +4,8 @@ var express = require('express');
 var router = express.Router();
 var multer = require('multer');
 var crypto = require('crypto');
+var bodyParser = require('body-parser');
+var oauthserver = require('oauth2-server');
 
 var image = require('./image/image.controller');
 
@@ -20,14 +22,33 @@ var storage = multer.diskStorage({
   }
 })
 
+// Authenticate
+router.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+router.use(bodyParser.json());
+
+router.oauth = oauthserver({
+  model: require('../src/authenticate/auth-model.js'),
+  grants: ['password', 'client_credentials'],
+  debug: true
+});
+
+router.all('/api/oauth2/token', router.oauth.grant());
+
 // api Routes resources
 router.get('/api/images', image.find);
 
-router.get('/api/uploadedImages', image.findUploaded);
+router.get('/api/uploadedImages', router.oauth.authorise(), image.findUploaded);
 router.get('/api/unmoderatedImages', image.findUnmoderated);
 router.get('/api/moderatedImages', image.findModerated);
 
 router.post('/api/image/moderate', image.moderate);
-router.post('/api/image', multer({ storage: storage }).single('uploadImage'), image.upload);
+router.post('/api/image', multer({
+  storage: storage
+}).single('uploadImage'), image.upload);
+
+router.use(router.oauth.errorHandler());
 
 module.exports = router;

@@ -10,7 +10,6 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var path = require('path');
-var oauthserver = require('oauth2-server');
 
 var routes = require('./src/routes');
 
@@ -24,26 +23,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-// Authenticate
-
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json());
-
-app.oauth = oauthserver({
-  model: require('./src/authenticate/auth-model.js'),
-  grants: ['password', 'client_credentials'],
-  debug: true
-});
-
-app.all('/api/oauth2/token', app.oauth.grant());
-
-app.get('/', app.oauth.authorise(), function (req, res) {
-  res.send('Congratulations, you are in a secret area!');
-});
-
-app.use(app.oauth.errorHandler());
 
 // Enable CORS
 app.use(cors());
