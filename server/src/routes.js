@@ -6,10 +6,8 @@ var multer = require('multer');
 var crypto = require('crypto');
 var bodyParser = require('body-parser');
 var oauthserver = require('oauth2-server');
-
-var image = require('./image/image.controller');
-
 var path = require('path')
+var image = require('./image/image.controller');
 
 var storage = multer.diskStorage({
   destination: './uploads/',
@@ -29,18 +27,18 @@ router.use(bodyParser.urlencoded({
 
 router.use(bodyParser.json());
 
-router.oauth = oauthserver({
+var oauth = oauthserver({
   model: require('../src/authenticate/auth-model.js'),
   grants: ['password', 'client_credentials'],
   debug: true
 });
 
-router.all('/api/oauth2/token', router.oauth.grant());
+router.all('/api/oauth2/token', oauth.grant());
 
 // api Routes resources
 router.get('/api/images', image.find);
 
-router.get('/api/uploadedImages', router.oauth.authorise(), image.findUploaded);
+router.get('/api/uploadedImages', oauth.authorise(), image.findUploaded);
 router.get('/api/unmoderatedImages', image.findUnmoderated);
 router.get('/api/moderatedImages', image.findModerated);
 
@@ -49,6 +47,6 @@ router.post('/api/image', multer({
   storage: storage
 }).single('uploadImage'), image.upload);
 
-router.use(router.oauth.errorHandler());
+router.use(oauth.errorHandler());
 
 module.exports = router;
