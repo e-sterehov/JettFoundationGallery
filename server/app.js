@@ -13,7 +13,7 @@ var path = require('path');
 
 var routes = require('./src/routes');
 
-mongoose.connect('mongodb://jettfoundation:foundation@ec2-54-86-188-99.compute-1.amazonaws.com/jett_foundation');
+mongoose.connect('mongodb://jettfoundation:foundation@ec2-54-91-153-241.compute-1.amazonaws.com/jett_foundation');
 
 /**
  * Express app configurations
