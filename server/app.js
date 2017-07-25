@@ -9,7 +9,6 @@ var config = require('config');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var path = require('path');
 
 var routes = require('./src/routes');
 
@@ -31,7 +30,7 @@ app.use(cors());
 app.use(routes);
 
 // Static files
-app.use('/', express.static(path.resolve('uploads')));
+app.use('/', express.static(__dirname + '/../public'));
 
 // Once database open, start server
 app.listen(config.APP_PORT, function () {
