@@ -31,6 +31,7 @@ app.use(routes);
 
 // Static files
 app.use('/', express.static(__dirname + '/../public'));
+app.use('/', express.static(__dirname + '/../../uploads'));
 
 // Once database open, start server
 app.listen(config.APP_PORT, function () {
