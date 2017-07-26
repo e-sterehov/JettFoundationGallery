@@ -6,6 +6,11 @@ var imageSchema = mongoose.Schema({
       required: true,
       trim: true
     },
+    url: {
+      type: String,
+      required: true,
+      trim: true
+    },
     originalName: {
       type: String,
       required: true

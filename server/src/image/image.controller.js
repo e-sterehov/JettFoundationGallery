@@ -137,12 +137,12 @@ function getModeratedImages(req, res) {
  */
 
 function uploadImage(req, res) {
-
   var firstName = (req.body.firstName);
   var lastName = (req.body.lastName);
   var image = req.file;
+  var fullUrl = req.protocol + '://' + req.get('host');
 
-  addImage(image, firstName, lastName, function (err, body) {
+  addImage(image, firstName, lastName, fullUrl, function (err, body) {
     if (!err) {
       return res.status(200).json(body);
     } else {
@@ -188,12 +188,13 @@ exports.moderate = moderateImage;
 
 // Helper Functions
 
-function addImage(image, firstName, lastName, callback) {
+function addImage(image, firstName, lastName, url, callback) {
   var imageUpload = {};
   var validationError = validateImageForm(image, firstName, lastName);
 
   if (!validationError) {
     imageUpload['name'] = image.filename;
+    imageUpload['url'] = url + '/' + image.filename;
     imageUpload['originalName'] = image.originalname;
     imageUpload['firstName'] = firstName;
     imageUpload['lastName'] = lastName;
