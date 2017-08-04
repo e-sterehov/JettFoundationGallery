@@ -193,11 +193,13 @@ function addImage(image, firstName, lastName, url, callback) {
   var validationError = validateImageForm(image, firstName, lastName);
 
   if (!validationError) {
+    var author = {
+      authorName: firstName + ' ' + lastName
+    }
     imageUpload['name'] = image.filename;
     imageUpload['url'] = url + '/' + image.filename;
     imageUpload['originalName'] = image.originalname;
-    imageUpload['firstName'] = firstName;
-    imageUpload['lastName'] = lastName;
+    imageUpload['author'] = author;
     imageUpload['moderated'] = false;
     imageUpload['rejected'] = false;
 
