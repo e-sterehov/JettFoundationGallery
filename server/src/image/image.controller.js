@@ -16,7 +16,7 @@ var savedImagesModel = require('./saved_image.model.js');
  */
 
 function queryServer(req, res) {
-  var limit = 20;
+  var limit = 100;
   var date = new Date();
   var jwto;
   var hour = date.getTime() + (date.getHours() * 60 * 60 * 1000);
@@ -48,6 +48,7 @@ function queryServer(req, res) {
           },
           json: {
             streams: [4674, 4675, 4731],
+            // streams: [4731, 4674, 4675],
             offset: req.query.offset * limit,
             limit: limit
           }
