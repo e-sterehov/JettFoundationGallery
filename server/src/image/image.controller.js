@@ -16,7 +16,7 @@ var savedImagesModel = require('./saved_image.model.js');
  */
 
 function queryServer(req, res) {
-  var limit = 1000;
+  var limit = 20;
   var date = new Date();
   var jwto;
   var hour = date.getTime() + (date.getHours() * 60 * 60 * 1000);
